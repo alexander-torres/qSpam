@@ -6,7 +6,7 @@ var qSpamDiv = document.createElement('div');
 document.body.appendChild(qSpamDiv);
 qSpamDiv.outerHTML = "<div draggable='true' ondragstart='GrabDiv(event)' ondrag='DropDiv(event)' id='qSpam' style='background: #fff; border: 1px solid grey; padding: 5px; position: absolute; right: 30px; top: 150px; width: 275px;'>\
 	<p style='display: inline-block; line-height: 150%; margin: 0;'><b>qSpam</b></p>\
-	<span style='border: 1px solid grey; border-radius: 1em; display: inline-block; float: right; text-align: center; width: 1.1em;'>?</span>\
+	<a href='https://github.com/alexander-torres/qSpam' style='border: 1px solid grey; border-radius: 1em; display: inline-block; float: right; text-align: center; text-decoration: none; width: 1.1em;' target='_blank'>?</a>\
 	<br>\
 	<button class='button2' onclick='qSpamToggle()' style='width: 40px;'>Run</button>\
 	<span id='qMessage' style='line-height: 100%;'></span>\
@@ -48,22 +48,29 @@ var qSum = () => {
 };
 
 var qSpam = 0;
+var qSpamStatus = document.getElementById('qSpamStatus');
 var messageTimers = [];
 
 function qSpamToggle() {
 	if (qChips[0].active == 0) {
-		clearTimeout(messageTimers[0]);
-		clearTimeout(messageTimers[1]);
-		qMessage.style.transition = '';
-		qMessage.style.opacity = 1;
-		qMessage.innerText = ' No Active Photonic Chips';
-		messageTimers[0] = setTimeout(() => {qMessage.style.transition = 'opacity 2s'; qMessage.style.opacity = 0;}, 1000);
-		messageTimers[1] = setTimeout(() => {qMessage.innerText = '';}, 3000);
+		FadeMsg(qMessage, ' No Active Photonic Chips');
 	} else if (qSpam == 0) {
 		qMessage.innerText = '';
+		qSpamStatus.innerText = 'ON';
 		qSpam = setInterval(() => {if (qSum() > 0) {qComp();};}, 1);
 	} else {
 		clearInterval(qSpam);
+		qSpamStatus.innerText = 'OFF';
 		qSpam = 0;
 	};
+};
+
+function FadeMsg(element, msg) {
+	clearTimeout(messageTimers[0]);
+	clearTimeout(messageTimers[1]);
+	element.style.transition = '';
+	element.style.opacity = 1;
+	element.innerText = msg;
+	messageTimers[0] = setTimeout(() => {element.style.transition = 'opacity 2s'; element.style.opacity = 0;}, 1000);
+	messageTimers[1] = setTimeout(() => {element.innerText = '';}, 3000);
 };
